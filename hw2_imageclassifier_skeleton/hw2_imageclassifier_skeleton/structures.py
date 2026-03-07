@@ -87,12 +87,12 @@ def get_equivariant_subspace(in_channels, k_in, k_out):
     # Build Reynolds operator:
     #   T_bar = (1/|G|) sum_g rho_out(g) kron rho_in(g^{-1})^T
     mats = []
-    for degree in (0, 90, 180, 270):
-        ??
-        ??
-        ??
-        ...
-        ??
+    # for degree in (0, 90, 180, 270):
+    #     ??
+    #     ??
+    #     ??
+    #     ...
+    #     ??
     
     T_bar = sum(mats) / len(mats)
 
@@ -100,9 +100,9 @@ def get_equivariant_subspace(in_channels, k_in, k_out):
     # If not, one may get small imaginary eigenvectors and values. **Just disregard imaginary part.**
     #  lambda_ are the eigenvalues
     #  V are the 1-left eigenvectors
-    lambda_, V = ??          # lambda: [D], V: [D, D]
+    # lambda_, V = ??          # lambda: [D], V: [D, D]
 
     
-    basis_flat = ??
+    # basis_flat = ??
     basis = basis_flat.reshape(-1, dim_out, dim_in).astype(np.float32)
     return basis

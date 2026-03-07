@@ -21,12 +21,14 @@ def load(
     Load log.
     """
     #
+    print(seed, shuffle, batch_size, cnn, kernel, stride,
+                    optim_alg, lr, wd, rot_flip)
     identifier = (
         hashlib.md5(
             str(
                 (
                     seed, shuffle, batch_size, cnn, kernel, stride,
-                    amprec, optim_alg, lr, wd, rot_flip,
+                    optim_alg, lr, wd, rot_flip,
                 ),
             ).encode(),
         ).hexdigest()
@@ -36,22 +38,22 @@ def load(
     stderr = os.path.join("sbatch", "{:s}.stderr.txt".format(identifier))
     ptlog = os.path.join("ptlog", "{:s}.ptlog".format(identifier))
 
-    #
-    with open(stderr, "r") as file:
-        #
-        for line in file:
-            #
-            (key, val) = line.strip().split(": ")
-            if key == "Elapsed":
-                #
-                (val, unit) = val.split(" ")
-                if unit == "sec":
-                    #
-                    runtime = float(val)
-                else:
-                    # UNEXPECT:
-                    # Unknown runtime unit.
-                    raise RuntimeError("Unknown runtime unit.")
+    # #
+    # with open(stderr, "r") as file:
+    #     #
+    #     for line in file:
+    #         #
+    #         (key, val) = line.strip().split(": ")
+    #         if key == "Elapsed":
+    #             #
+    #             (val, unit) = val.split(" ")
+    #             if unit == "sec":
+    #                 #
+    #                 runtime = float(val)
+    #             else:
+    #                 # UNEXPECT:
+    #                 # Unknown runtime unit.
+    #                 raise RuntimeError("Unknown runtime unit.")
 
     #
     data_dict: Dict[str, Union[List[float], List[int], List[str]]]
@@ -89,14 +91,14 @@ def load(
         data_dict_test_acc["Case"] = ["Test Acc"] * n
         return (
             (
-                runtime,
+                # runtime,
                 pd.concat(
                     (
                         pd.DataFrame(data_dict_train_acc),
                         pd.DataFrame(data_dict_test_acc),
                     ),
                     ignore_index=True,
-                ),
+                )
             )
         )
 
@@ -112,14 +114,15 @@ def task_batch_size(ce: bool, /) -> None:
         #
         for lr in (1e-3, 1e-4, 1e-5):
             #
-            (runtime, frame) = (
+            # (runtime, frame) = (
+            (frame) = (
                 load(
                     seed=47, shuffle=False, batch_size=batch_size, cnn=False,
                     kernel=5, stride=1, amprec=False,
                     optim_alg="sgd", lr=lr, wd=0.0, ce=ce, rot_flip=False,
                 )
             )
-            buf_runtime.append(runtime)
+            # buf_runtime.append(runtime)
             buf_frame.append(frame)
     frame = pd.concat(buf_frame, ignore_index=True)
 
@@ -148,13 +151,13 @@ def task_optimizer(ce: bool, /) -> None:
     buf_frame = []
     for optim_alg in ("sgd", "momentum", "nesterov", "adam"):
         #
-        (runtime, frame) = (
+        (frame) = (
             load(
                 seed=47, shuffle=False, batch_size=100, cnn=False,                kernel=5, stride=1, amprec=False, optim_alg=optim_alg, lr=1e-3,
                 wd=0.0, ce=ce, rot_flip=False,
             )
         )
-        buf_runtime.append(runtime)
+        # buf_runtime.append(runtime)
         buf_frame.append(frame)
     frame = pd.concat(buf_frame, ignore_index=True)
 
@@ -183,13 +186,13 @@ def task_regularization(ce: bool, /) -> None:
     buf_frame = []
     for l2lambda in (1.0, 0.1, 0.01):
         #
-        (runtime, frame) = (
+        (frame) = (
             load(
                 seed=47, shuffle=False, batch_size=100, cnn=False,                kernel=5, stride=1, amprec=False, optim_alg="sgd", lr=1e-3,
                 wd=l2lambda, ce=ce, rot_flip=False,
             )
         )
-        buf_runtime.append(runtime)
+        # buf_runtime.append(runtime)
         buf_frame.append(frame)
     frame = pd.concat(buf_frame, ignore_index=True)
 
@@ -218,14 +221,16 @@ def task_cnn(ce: bool, /) -> None:
     buf_frame = []
     for (kernel, stride) in ((5, 1), (3, 3), (14, 1)):
         #
-        (runtime, frame) = (
+        # (runtime, frame) = (
+        (frame) = (
             load(
                 seed=47, shuffle=False, batch_size=100, cnn=True,                kernel=kernel, stride=stride, amprec=False,
                 optim_alg="default", lr=1e-3, wd=0.0, ce=ce, rot_flip=False,
             )
         )
-        buf_runtime.append(runtime)
+        # buf_runtime.append(runtime)
         buf_frame.append(frame)
+    print(buf_frame)
     frame = pd.concat(buf_frame, ignore_index=True)
 
     #
@@ -252,13 +257,13 @@ def task_shuffle_cnn(ce: bool, /) -> None:
     buf_runtime = []
     buf_frame = []
 
-    (runtime, frame) = (
+    (frame) = (
         load(
             seed=47, shuffle=True, batch_size=100, cnn=True,            kernel=5, stride=1, amprec=False,
             optim_alg="default", lr=1e-2, wd=0.0, ce=ce, rot_flip=False,
         )
     )
-    buf_runtime.append(runtime)
+    # buf_runtime.append(runtime)
     buf_frame.append(frame)
     frame = pd.concat(buf_frame, ignore_index=True)
 

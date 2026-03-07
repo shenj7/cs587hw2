@@ -20,6 +20,8 @@ def main(*ARGS) -> None:
     #
     source = args.source
 
+    torchvision.datasets.MNIST.mirrors = ["https://ossci-datasets.s3.amazonaws.com/mnist/"]
+
     #
     torchvision.datasets.MNIST(source, train=True, download=True)
 

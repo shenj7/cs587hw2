@@ -85,6 +85,11 @@ class CNN(torch.nn.Module):
         """
         #
         Model.__init__(self)
+        # print(channels)
+        # print(shapes)
+        # print(size)
+
+        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         # Create a list of Conv2D layers and shared max-pooling layer.
         # Input and output channles are given in `channels`.
@@ -95,7 +100,11 @@ class CNN(torch.nn.Module):
         # self.pool = ...
         # ```
         # YOU SHOULD FILL IN THIS FUNCTION
-        ...
+        buf_conv = []
+        for (ch_ins, ch_outs) in zip(channels[:-1], channels[1:]):
+            buf_conv.append(torch.nn.Conv2d(ch_ins, ch_outs, kernel_size=kernel_size_conv, stride=stride_size_conv, padding=PADDING))
+        self.convs = torch.nn.ModuleList(buf_conv)
+        self.pool = torch.nn.MaxPool2d(kernel_size=kernel_size_pool, stride=stride_size_pool)
 
         # Create a list of Linear layers.
         # Number of layer neurons are given in `shapes` except for input.
@@ -105,7 +114,23 @@ class CNN(torch.nn.Module):
         # self.linears = torch.nn.ModuleList(buf)
         # ```
         # YOU SHOULD FILL IN THIS FUNCTION
-        ...
+        buf = []
+        # pool_output_size = 1 + (size + 2 * PADDING - kernel_size_conv)
+        with torch.no_grad():
+            dummy_input = torch.zeros(1, channels[0], size, size)
+            for conv in self.convs:
+                dummy_input = conv(dummy_input)
+                dummy_input = torch.nn.functional.relu(dummy_input)
+                dummy_input = self.pool(dummy_input)
+            
+            # This is the magic number for your first Linear layer
+            pool_output_size = dummy_input.numel()
+
+
+        buf.append(torch.nn.Linear(pool_output_size, shapes[0]))
+        for (num_ins, num_outs) in zip(shapes[:-1], shapes[1:]):
+            buf.append(torch.nn.Linear(num_ins, num_outs))
+        self.linears = torch.nn.ModuleList(buf)
 
     def initialize(self, rng: torch.Generator) -> None:
         R"""
@@ -133,7 +158,17 @@ class CNN(torch.nn.Module):
         """
         # CNN forwarding whose activation functions should all be relu.
         # YOU SHOULD FILL IN THIS FUNCTION
-        ...
+        for conv in self.convs:
+            x = conv(x)
+            x = torch.nn.functional.relu(x)
+            x = self.pool(x)
+        x = x.view(x.size(0), -1)
+        # x = torch.flatten(x, start_dim=1)
+        for linear in self.linears:
+            x = linear(x)
+            if linear != self.linears[-1]:
+                x = torch.nn.functional.relu(x)
+        return x
 
 
 # =============================================================================
@@ -232,13 +267,13 @@ class GEquivariantConv2d(torch.nn.Module):
         W_blocks = (W + 2 * self.padding - self.k_in) // self.stride + 1
 
         # 2) Build per-output-channel linear maps from coeffs and basis
-        Wmap = ??
+        # Wmap = ??
     
         # 3) Apply Wmap to each patch. Note that we get a vector as output per patch. This vector is the new patch in the feature map.
-        patch_outputs = ??
+        # patch_outputs = ??
 
-        if self.bias is not None:
-            ??
+        # if self.bias is not None:
+        #     ??
         
         # 4) Reshape (refolds) output patches back into a feature map
         # fold expects [B, out_channels * dim_out, L]

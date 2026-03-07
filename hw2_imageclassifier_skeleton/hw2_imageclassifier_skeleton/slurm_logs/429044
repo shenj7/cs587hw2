@@ -1,0 +1,45 @@
+/home/shen574/cs587hw2/hw2_imageclassifier_skeleton/hw2_imageclassifier_skeleton/visualize.py:63: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  accs = np.array(torch.load(ptlog))
+47 False 100 True 5 1 default 0.001 0.0 False
+47 False 100 True 3 3 default 0.001 0.0 False
+47 False 100 True 14 1 default 0.001 0.0 False
+[     Epoch Seed     Shuffle Batch Size  ...     LR   WD  Accuracy       Case
+0        0   47  No-Shuffle        100  ...  0.001  0.0  0.076250  Train Acc
+1        1   47  No-Shuffle        100  ...  0.001  0.0  0.429983  Train Acc
+2        2   47  No-Shuffle        100  ...  0.001  0.0  0.584300  Train Acc
+3        3   47  No-Shuffle        100  ...  0.001  0.0  0.663167  Train Acc
+4        4   47  No-Shuffle        100  ...  0.001  0.0  0.814617  Train Acc
+..     ...  ...         ...        ...  ...    ...  ...       ...        ...
+197     96   47  No-Shuffle        100  ...  0.001  0.0  0.983100   Test Acc
+198     97   47  No-Shuffle        100  ...  0.001  0.0  0.983100   Test Acc
+199     98   47  No-Shuffle        100  ...  0.001  0.0  0.983200   Test Acc
+200     99   47  No-Shuffle        100  ...  0.001  0.0  0.983100   Test Acc
+201    100   47  No-Shuffle        100  ...  0.001  0.0  0.983300   Test Acc
+
+[202 rows x 12 columns],      Epoch Seed     Shuffle Batch Size  ...     LR   WD  Accuracy       Case
+0        0   47  No-Shuffle        100  ...  0.001  0.0  0.115833  Train Acc
+1        1   47  No-Shuffle        100  ...  0.001  0.0  0.176533  Train Acc
+2        2   47  No-Shuffle        100  ...  0.001  0.0  0.174750  Train Acc
+3        3   47  No-Shuffle        100  ...  0.001  0.0  0.183883  Train Acc
+4        4   47  No-Shuffle        100  ...  0.001  0.0  0.190233  Train Acc
+..     ...  ...         ...        ...  ...    ...  ...       ...        ...
+197     96   47  No-Shuffle        100  ...  0.001  0.0  0.697000   Test Acc
+198     97   47  No-Shuffle        100  ...  0.001  0.0  0.697300   Test Acc
+199     98   47  No-Shuffle        100  ...  0.001  0.0  0.698700   Test Acc
+200     99   47  No-Shuffle        100  ...  0.001  0.0  0.700600   Test Acc
+201    100   47  No-Shuffle        100  ...  0.001  0.0  0.701400   Test Acc
+
+[202 rows x 12 columns],      Epoch Seed     Shuffle Batch Size  ...     LR   WD  Accuracy       Case
+0        0   47  No-Shuffle        100  ...  0.001  0.0  0.106567  Train Acc
+1        1   47  No-Shuffle        100  ...  0.001  0.0  0.167567  Train Acc
+2        2   47  No-Shuffle        100  ...  0.001  0.0  0.280150  Train Acc
+3        3   47  No-Shuffle        100  ...  0.001  0.0  0.395433  Train Acc
+4        4   47  No-Shuffle        100  ...  0.001  0.0  0.504867  Train Acc
+..     ...  ...         ...        ...  ...    ...  ...       ...        ...
+197     96   47  No-Shuffle        100  ...  0.001  0.0  0.975900   Test Acc
+198     97   47  No-Shuffle        100  ...  0.001  0.0  0.976000   Test Acc
+199     98   47  No-Shuffle        100  ...  0.001  0.0  0.976300   Test Acc
+200     99   47  No-Shuffle        100  ...  0.001  0.0  0.976300   Test Acc
+201    100   47  No-Shuffle        100  ...  0.001  0.0  0.976600   Test Acc
+
+[202 rows x 12 columns]]

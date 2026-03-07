@@ -306,8 +306,8 @@ def main(*ARGS):
 
     #
     size = 28
-    # channels = [1, 100, 32]
-    channels = [1, 1000, 320]
+    channels = [1, 100, 32]
+    # channels = [1, 1000, 320]
     fcs = [300, 100, 10]
     kernel_size_conv = kernel
     stride_size_conv = stride
@@ -324,6 +324,7 @@ def main(*ARGS):
             kernel_size_pool=kernel_size_pool,
             stride_size_pool=stride_size_pool,
         )
+        print(model)
     else:
         #
         model = MLP(size=size, shapes=fcs)
