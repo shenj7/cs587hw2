@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/shen574/cs587hw2/hw2_imageclassifier_skeleton/hw2_imageclassifier_skeleton/train_eqcnn.py", line 23, in <module>
+    from models import GEquivariantCNN
+  File "/home/shen574/cs587hw2/hw2_imageclassifier_skeleton/hw2_imageclassifier_skeleton/models.py", line 6, in <module>
+    from structures import get_equivariant_subspace
+  File "/home/shen574/cs587hw2/hw2_imageclassifier_skeleton/hw2_imageclassifier_skeleton/structures.py", line 79
+    def transform_in(vec, degree):
+IndentationError: unexpected indent
+srun: error: scholar-g000: task 0: Exited with exit code 1

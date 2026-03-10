@@ -267,13 +267,13 @@ class GEquivariantConv2d(torch.nn.Module):
         W_blocks = (W + 2 * self.padding - self.k_in) // self.stride + 1
 
         # 2) Build per-output-channel linear maps from coeffs and basis
-        # Wmap = ??
+        Wmap = torch.einsum('on, ndi -> odi', self.coeffs, self.basis)
     
         # 3) Apply Wmap to each patch. Note that we get a vector as output per patch. This vector is the new patch in the feature map.
-        # patch_outputs = ??
+        patch_outputs = torch.einsum('odi, bil -> bodl', Wmap, cols)
 
-        # if self.bias is not None:
-        #     ??
+        if self.bias is not None:
+            patch_outputs = patch_outputs + self.bias.view(1, self.out_channels, 1, 1)
         
         # 4) Reshape (refolds) output patches back into a feature map
         # fold expects [B, out_channels * dim_out, L]

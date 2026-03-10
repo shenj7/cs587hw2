@@ -78,31 +78,35 @@ def get_equivariant_subspace(in_channels, k_in, k_out):
 
     def transform_in(vec, degree):
         """Rotate every channel's k_in x k_in slice."""
-        raise NotImplementedError
+        k = (degree // 90) % 4
+        patches = np.asarray(vec).reshape(in_channels, k_in, k_in)
+        rotated = np.rot90(patches, k=k, axes=(1, 2))
+        return np.ascontiguousarray(rotated).reshape(-1)
 
     def transform_out(vec, degree):
         """Rotate the k_out x k_out output patch."""
-        raise NotImplementedError
+        k = (degree // 90) % 4
+        patch = np.asarray(vec).reshape(k_out, k_out)
+        rotated = np.rot90(patch, k=k)
+        return np.ascontiguousarray(rotated).reshape(-1)
+
     
     # Build Reynolds operator:
     #   T_bar = (1/|G|) sum_g rho_out(g) kron rho_in(g^{-1})^T
     mats = []
-    # for degree in (0, 90, 180, 270):
-    #     ??
-    #     ??
-    #     ??
-    #     ...
-    #     ??
+    degrees = [0, 90, 180, 270]
+    
+    for degree in degrees:
+        rho_out = np.stack([transform_out(e, degree) for e in np.eye(dim_out)], axis=1)
+        rho_in_inv = np.stack([transform_in(e, -degree) for e in np.eye(dim_in)], axis=1)
+        mats.append(np.kron(rho_out, rho_in_inv.T))
     
     T_bar = sum(mats) / len(mats)
 
-    # One can use np.allclose(T_bar, T_bar.T, atol=1e-6) to check if T_bar transpose is close to T_bar (may not be due to numerical errors)
-    # If not, one may get small imaginary eigenvectors and values. **Just disregard imaginary part.**
-    #  lambda_ are the eigenvalues
-    #  V are the 1-left eigenvectors
-    # lambda_, V = ??          # lambda: [D], V: [D, D]
-
+    lambda_, V = np.linalg.eig(T_bar)
     
-    # basis_flat = ??
+    one_mask = np.isclose(lambda_, 1.0, atol=1e-6)
+    
+    basis_flat = V[:, one_mask].T.real
     basis = basis_flat.reshape(-1, dim_out, dim_in).astype(np.float32)
     return basis
